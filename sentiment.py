@@ -4,6 +4,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import io
+import pandas as pd
 
 # Ensure the VADER lexicon is downloaded
 nltk.download('vader_lexicon')
@@ -19,7 +20,6 @@ if option == "Text Input":
 elif option == "Upload File":
     uploaded_file = st.file_uploader("Upload a text file", type=["txt"])
     if uploaded_file:
-        # Read file content as text
         stringio = io.StringIO(uploaded_file.read().decode("utf-8"))
         user_text = stringio.read()
     else:
@@ -33,10 +33,12 @@ if user_text:
     st.subheader("Sentiment Scores")
     st.write(sentiment_scores)
     
-    # Prepare data for bar chart visualization
+    # Prepare a DataFrame for bar chart visualization
     score_names = list(sentiment_scores.keys())
     score_values = list(sentiment_scores.values())
-    st.bar_chart(data={"Scores": score_values}, x=score_names)
+    df = pd.DataFrame({"Scores": score_values}, index=score_names)
+    
+    st.bar_chart(df)
     
     # Optional: Generate a word cloud from the text
     st.subheader("Word Cloud (Optional)")
